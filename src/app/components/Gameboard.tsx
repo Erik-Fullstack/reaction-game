@@ -6,15 +6,26 @@ import { useEffect, useState } from "react";
 export default function Gameboard() {
     const [gameActive, setGameActive] = useState(false);
     const [failedAttempt, setFailedAttempt] = useState(0);
-    const [gameEnded, setGameEnded] = useState(false);
+    const [timerStarted, setTimerStarted] = useState(false);
+    const [startTime, setStartTime] = useState<null | number>(null)
+    const [reaction, setReaction] = useState<null | number>(null);
 
-    //körs när spelet startar
+    //doesnt run on mount
     useEffect(() => {
         if (gameActive) {
-            setTimeout(() => setGameEnded(true), (Math.floor(Math.random() * 7) + 1) * 1000);
+            setTimeout(() => {
+                setTimerStarted(true);
+                setStartTime(performance.now());
+            }, (Math.floor(Math.random() * 7) + 1) * 1000);
         }
     }, [gameActive]);
 
+    //doesnt run on mount
+    useEffect(() => {
+        if (reaction !== null) {
+            console.log(`Din reaktionsförmåga är: ${Number(reaction.toFixed(0))}ms`);
+        }
+    }, [reaction])
     if (!gameActive) {
         return (
             <div className="flex size-full"
@@ -22,14 +33,15 @@ export default function Gameboard() {
                 <p className="text-white mx-auto mt-8 text-2xl">Tryck på skärmen för att starta {failedAttempt > 0 && failedAttempt.toString()}</p>
             </div>
         )
-    } else if (gameEnded) {
+    } else if (timerStarted) {
         return (
-            //här ska timern in
             <div
                 className="size-full bg-green-500"
                 onClick={() => {
+                    const endTime = performance.now();
+                    setReaction(endTime - startTime!);
                     setGameActive(false);
-                    setGameEnded(false);
+                    setTimerStarted(false);
                 }}
             />
         )

@@ -1,10 +1,8 @@
 import Leaderboard from "./components/Leaderboard";
 import Gameboard from "./components/Gameboard";
-//TODO: startgame>sidan blir röd och timer startas för att veta när appen ska stoppa(ingen timer för spelare än)>ny clickevent riggas för att avsluta spelet>
-  //efter en random tid mellan 2-8sek blir skärmen röd och en timer sätts igång i bakgrunden
-  //>>>VAL>>> trycker man innan skärmen bytt färg blir det felmeddelande
-  //trycker man efter så visas tiden från att skärmen bytte färg tills man tryckte
+//TODO: trycker man innan skärmen bytt färg blir det felmeddelande (Too early)
   //lägg till supabase för att spara scores för polarna?
+  //Timer om man inte klickar för att avsluta spelet?
 
 export default function Home() {
   return ( //bg-green-700 på main sen
