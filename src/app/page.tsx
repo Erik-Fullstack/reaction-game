@@ -3,6 +3,7 @@ import Gameboard from "./components/Gameboard";
 //TODO: trycker man innan skärmen bytt färg blir det felmeddelande (Too early)
   //lägg till supabase för att spara scores för polarna?
   //Timer om man inte klickar för att avsluta spelet?
+  //felmeddelande om man klickar för snabbt
 
 export default function Home() {
   return ( //bg-green-700 på main sen

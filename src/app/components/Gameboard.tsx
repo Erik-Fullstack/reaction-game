@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 
 export default function Gameboard() {
     const [gameActive, setGameActive] = useState(false);
-    const [failedAttempt, setFailedAttempt] = useState(0);
+    const [failedAttempt, setFailedAttempt] = useState(false);
     const [timerStarted, setTimerStarted] = useState(false);
     const [startTime, setStartTime] = useState<null | number>(null)
     const [reaction, setReaction] = useState<null | number>(null);
@@ -15,6 +15,7 @@ export default function Gameboard() {
     //only runs when game is started
     useEffect(() => {
         if (gameActive) {
+            //runs after a random time so people cant predict the click
             timeOut.current = setTimeout(() => {
                 setTimerStarted(true);
                 setStartTime(performance.now());
@@ -28,28 +29,35 @@ export default function Gameboard() {
         }
     }, [gameActive]);
 
-    //runs when reaction changes
-    useEffect(() => {
-        if (reaction !== null) {
-            console.log(`Your reaction time is: ${Number(reaction.toFixed(0))}ms`);
-        }
-    }, [reaction])
     if (!gameActive) {
         return (
             <div className="flex flex-col size-full"
                 onClick={() => {
                     setReaction(null);
+                    setFailedAttempt(false);
                     setGameActive(true);
                 }}>
-                <p className="text-white mx-auto mt-12 text-3xl text-center">
-                    {reaction ?
-                        Number(reaction.toFixed(0)) <= 1000 ?
-                            `Your reaction time is: ${reaction.toFixed(0)} ms` : `Your reaction time is: ${(reaction/1000).toFixed(3)} s` 
-                        : "Press the screen to start"}
-                </p> 
-                <p className="text-white mx-auto mt-4 text-xl text-center">
-                    {reaction && "Press the screen to play again!"}
-                </p>
+                {failedAttempt ?
+                    <>
+                        <p className="text-white mx-auto mt-12 text-3xl text-center">
+                            Too early!
+                        </p>
+                        <p className="text-white mx-auto mt-4 text-xl text-center">
+                            Press the screen to try again!
+                        </p>
+                    </>
+                    : <>
+                        <p className="text-white mx-auto mt-12 text-3xl text-center">
+                            {reaction ?
+                                Number(reaction.toFixed(0)) <= 1000 ?
+                                    `Your reaction time is: ${reaction.toFixed(0)} ms` : `Your reaction time is: ${(reaction / 1000).toFixed(3)} s`
+                                : "Press the screen to start"}
+                        </p>
+                        <p className="text-white mx-auto mt-4 text-xl text-center">
+                            {reaction && "Press the screen to play again!"}
+                        </p>
+                    </>}
+
             </div>
         )
     } else if (timerStarted) {
@@ -68,7 +76,7 @@ export default function Gameboard() {
         <div
             className="size-full bg-red-500"
             onClick={() => {
-                setFailedAttempt(f => f + 1)
+                setFailedAttempt(true)
                 setGameActive(false);
             }} />
     )
