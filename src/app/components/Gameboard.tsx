@@ -11,6 +11,59 @@ export default function Gameboard() {
     const [reaction, setReaction] = useState<null | number>(null);
 
     const timeOut = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const touchStart = useRef(false);
+    const blockClick = useRef(false);
+    //functions to handle touchscreen+mouse
+
+    const handleTouch = () => {
+        if (blockClick.current) return;
+        touchStart.current = true
+        if (!gameActive) {
+            startGame();
+            return;
+        }
+        if (timerStarted) {
+            stopGame();
+        } else {
+            tooEarly();
+        }
+    }
+    const handleClick = () => {
+        if (blockClick.current) return;
+        if (!touchStart.current) {
+            if (!gameActive) {
+                startGame();
+                return;
+            }
+            if (timerStarted) {
+                stopGame();
+            } else {
+                tooEarly();
+            }
+        }
+    }
+
+    const startGame = () => {
+        setReaction(null);
+        setFailedAttempt(false);
+        setGameActive(true);
+    }
+    const tooEarly = () => {
+        setFailedAttempt(true);
+        setGameActive(false);
+        startCooldown();
+    }
+    const stopGame = () => {
+        const endTime = performance.now();
+        setReaction(endTime - startTime!);
+        setGameActive(false);
+        setTimerStarted(false);
+        startCooldown();
+    }
+    const startCooldown = () => {
+        blockClick.current = true;
+        setTimeout(() => blockClick.current = false, 400)
+    }
 
     //only runs when game is started
     useEffect(() => {
@@ -19,7 +72,7 @@ export default function Gameboard() {
             timeOut.current = setTimeout(() => {
                 setTimerStarted(true);
                 setStartTime(performance.now());
-            }, (Math.floor(Math.random() * 7) + 1) * 1000);
+            }, (Math.floor(Math.random() * 3) + 1) * 1000);
         }
         return () => {
             if (timeOut.current) {
@@ -31,29 +84,27 @@ export default function Gameboard() {
 
     if (!gameActive) {
         return (
-            <div className="flex flex-col size-full"
-                onClick={() => {
-                    setReaction(null);
-                    setFailedAttempt(false);
-                    setGameActive(true);
-                }}>
+            <div className="flex flex-col size-full text-center text-3xl text-white sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl"
+
+                onMouseDown={() => handleClick()}
+                onTouchStart={() => handleTouch()}>
                 {failedAttempt ?
                     <>
-                        <p className="text-white mx-auto mt-12 text-3xl text-center">
+                        <p className="mt-12">
                             Too early!
                         </p>
-                        <p className="text-white mx-auto mt-4 text-xl text-center">
+                        <p className="mt-4 text-xl sm:text-2xl md:text-3xl xl:text-4xl">
                             Press the screen to try again!
                         </p>
                     </>
                     : <>
-                        <p className="text-white mx-auto mt-12 text-3xl text-center">
+                        <p className="mt-12 mx-2 sm:mx-0">
                             {reaction ?
                                 Number(reaction.toFixed(0)) <= 1000 ?
-                                    `Your reaction time is: ${reaction.toFixed(0)} ms` : `Your reaction time is: ${(reaction / 1000).toFixed(3)} s`
+                                    `Your reaction time is ${reaction.toFixed(0)}ms` : `Your reaction time is ${(reaction / 1000).toFixed(3)}s`
                                 : "Press the screen to start"}
                         </p>
-                        <p className="text-white mx-auto mt-4 text-xl text-center">
+                        <p className="mt-4 text-xl sm:text-2xl md:text-3xl xl:text-4xl">
                             {reaction && "Press the screen to play again!"}
                         </p>
                     </>}
@@ -64,20 +115,15 @@ export default function Gameboard() {
         return (
             <div
                 className="size-full bg-green-500"
-                onClick={() => {
-                    const endTime = performance.now();
-                    setReaction(endTime - startTime!);
-                    setGameActive(false);
-                    setTimerStarted(false);
-                }}
+                onTouchStart={() => handleTouch()}
+                onMouseDown={() => handleClick()}
             />
         )
     } else return (
         <div
             className="size-full bg-red-500"
-            onClick={() => {
-                setFailedAttempt(true)
-                setGameActive(false);
-            }} />
+            onTouchStart={() => handleTouch()}
+            onMouseDown={() => handleClick()}
+        />
     )
 }
