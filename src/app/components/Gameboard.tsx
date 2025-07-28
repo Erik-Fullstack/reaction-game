@@ -84,8 +84,7 @@ export default function Gameboard() {
 
     if (!gameActive) {
         return (
-            <div className="flex flex-col size-full text-center text-3xl text-white sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl"
-
+            <div className="flex flex-col size-full cursor-pointer text-center text-3xl text-white sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl"
                 onMouseDown={() => handleClick()}
                 onTouchStart={() => handleTouch()}>
                 {failedAttempt ?
@@ -114,14 +113,14 @@ export default function Gameboard() {
     } else if (timerStarted) {
         return (
             <div
-                className="size-full bg-green-500"
+                className="size-full cursor-pointer bg-green-500"
                 onTouchStart={() => handleTouch()}
                 onMouseDown={() => handleClick()}
             />
         )
     } else return (
         <div
-            className="size-full bg-red-500"
+            className="size-full cursor-pointer bg-red-500"
             onTouchStart={() => handleTouch()}
             onMouseDown={() => handleClick()}
         />
