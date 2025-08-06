@@ -2,19 +2,23 @@
 
 import { useEffect, useRef, useState } from "react";
 
+type GameboardProps = {
+    reaction: null | number,
+    setReaction: React.Dispatch<React.SetStateAction<number | null>>
+}
 
-export default function Gameboard() {
+export default function Gameboard({reaction, setReaction}: GameboardProps) {
     const [gameActive, setGameActive] = useState(false);
     const [failedAttempt, setFailedAttempt] = useState(false);
     const [timerStarted, setTimerStarted] = useState(false);
     const [startTime, setStartTime] = useState<null | number>(null)
-    const [reaction, setReaction] = useState<null | number>(null);
 
+    //refs to prevent doubleclicking after getting ur time
     const timeOut = useRef<ReturnType<typeof setTimeout> | null>(null);
     const touchStart = useRef(false);
     const blockClick = useRef(false);
-    //functions to handle touchscreen+mouse
 
+    //functions to handle touchscreen+mouse
     const handleTouch = () => {
         if (blockClick.current) return;
         touchStart.current = true
