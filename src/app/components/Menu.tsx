@@ -49,7 +49,23 @@ export default function Menu({ reaction }: MenuProps) {
                 </>
                 :
                 <>
-                    <TextField color="#272727" label="Add your name" variant="outlined" value={name} onChange={(e) => setName(e.target.value)}/>
+                    <TextField sx={{
+                        "& .MuiOutlinedInput-root": {
+                            "&.Mui-focused fieldset": {
+                                borderColor: "#272727",
+                            },
+                        },
+                        "& .MuiInputLabel-root": {
+                            "&.Mui-focused": {
+                                color: "#272727",
+                            },
+                        },
+                    }} 
+                    label="Add your name" 
+                    variant="outlined" 
+                    value={name} 
+                    onChange={(e) => setName(e.target.value)} 
+                    />
                     <Button className="h-14" variant="contained" size="large" style={{ background: "#272727" }} onClick={() => submitScore()}>Submit score</Button>
                 </>}
         </div>
