@@ -41,6 +41,7 @@ export default function Menu({ reaction }: MenuProps) {
     }
     return (
         <div className="flex flex-col gap-4 justify-center sm:flex-row sm:gap-10">
+            {/* Leaderboard WIP */}
             {!nameField ?
                 <>
                     <Button className="h-14" variant="contained" size="large" style={{ background: "#272727" }} onClick={() => fetchScores()}>Leaderboard</Button>
