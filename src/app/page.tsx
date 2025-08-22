@@ -6,8 +6,9 @@ import Image from "next/image";
 import Link from "next/link";
 
 //TODO: trycker man innan skärmen bytt färg blir det felmeddelande (Too early)
-  //lägg till supabase för att spara scores?
+  //2 olika leaderboards för mobil och pc? eller enum i DB som visar vad man gjorde sin score på?
   //bäst av 5?
+  //reaction måste clearas efter submit score så man inte kan skicka samma flera gånger
 export default function Home() {
   const [reaction, setReaction] = useState<null | number>(null)
   return (
